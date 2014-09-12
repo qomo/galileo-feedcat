@@ -71,29 +71,81 @@ class WeiBo(threading.Thread):
         self.thread_stop = True
 
 
-class DigitalPin:
-    '''example irdetecter = DigitalPin(4, INPUT)'''
-    def __init__(self, pnum, direction):
-        '''init the DigitalPin:
-            pnum --- DigitalPin number
-            direction --- INPUT or OUTPUT
-            '''
-        self.PNUM=pnum
-        pinMode(pnum, direction)
+# class DigitalPin:
+#     '''example irdetecter = DigitalPin(4, INPUT)'''
+#     def __init__(self, pnum, direction):
+#         '''init the DigitalPin:
+#             pnum --- DigitalPin number
+#             direction --- INPUT or OUTPUT
+#             '''
+#         self.PNUM=pnum
+#         pinMode(pnum, direction)
 
-    def get_state(self):
-        if direction==HIGH:
-            return digitalRead(self.PNUM)
-        else:
-            print "ERROR!!!"
+#     def get_state(self):
+#         if direction==HIGH:
+#             return digitalRead(self.PNUM)
+#         else:
+#             print "ERROR!!!"
 
-    def set_state(self, val):
-        if direction==LOW:
-            digitalWrite(self.PNUM, val)
-        else:
-            print "ERROR!!!"
+#     def set_state(self, val):
+#         if direction==LOW:
+#             digitalWrite(self.PNUM, val)
+#         else:
+#             print "ERROR!!!"
 
+class PIRSensor:
+    """用于控制热释红外传感器"""
+    def __init__(self, sensorPin):
+        pinMode(sensorPin, INPUT)
 
+    def isCatHere(self):
+        return digitalRead(sensorPin)
+        
+
+class FoodDoor:
+    """控制门控电机"""
+    def __init__(self, motorpin1, motorpin2, clossdoorpin):
+        pinMode(motorpin1, OUTPUT)
+        pinMode(motorpin2, OUTPUT)
+        pinMode(clossdoorpin, INPUT)
+
+    def openDoor(self):
+        digitalWrite(motorpin1, HIGH)
+        digitalWrite(motorpin2, LOW)
+
+    def closeDoor(self):
+        digitalWrite(motorpin1, LOW)
+        digitalWrite(motorpin2, HIGH)
+
+    def stopDoor(self):
+        digitalWrite(motorpin1, LOW)
+        digitalWrite(motorpin2, LOW)
+
+    def isClose(self):
+        return digitalRead(clossdoorpin)
+
+    def autoCloseDoor(self):
+        self.clossDoor()
+        while not self.isClose():
+            pass
+        self.stopDoor()
+
+    def openDoorTime(self, seconds):
+        self.openDoor()
+        time.sleep(seconds)
+
+class Camera():
+    """control Camera"""
+    def __init__(self, port):
+        pass
+
+    def getImg(self):
+        pass
+
+    def __del__(self):
+        pass
+
+          
 
 if __name__=="__main__":
     wb=WeiBo()

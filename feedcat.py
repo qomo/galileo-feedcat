@@ -14,15 +14,15 @@ class WeiBoRobot(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.thread_stop = False
-        self.APP_KEY='792490047'
-        self.APP_SECRET='ce419042c4a2bc68094bd80f77b974e6'
+        self.APP_KEY='1366434820'
+        self.APP_SECRET='e0e4ad8f66c9bc8032ce9618371a7354'
         self.CALLBACK_URL = 'https://api.weibo.com/oauth2/default.html'
         self.client = APIClient(app_key=self.APP_KEY,app_secret=self.APP_SECRET, redirect_uri=self.CALLBACK_URL)
-        self.access_token=u'2.00jaSd3B0XrMdreb20d051bavjBIdC'
-        self.expires_in=1410807599
+        self.access_token=u'2.009mf6fFSH7TUB0d3e9c1f7031M_KB'
+        self.expires_in=1568452509
         self.client.set_access_token(self.access_token, self.expires_in)
         self.renew_old_mentions_number()
-        # self.OLD_MENTIONS_NUM = self.OLD_MENTIONS_NUM - 1
+        self.OLD_MENTIONS_NUM = self.OLD_MENTIONS_NUM - 4
         self.door = FoodDoor(7, 8, 6)
     
     def send_txt(self, string=u"Hello World!"):
@@ -52,15 +52,17 @@ class WeiBoRobot(threading.Thread):
 
     def run(self):
         while not self.thread_stop:
-            time.sleep(10)
-            for st in self.get_new_mentions():
+            time.sleep(5)
+            new_mentions = self.get_new_mentions()
+            new_mentions.reverse()
+            for st in new_mentions:
                 print st.text.encode('utf-8')
-                if u'\u732b\u54aa\u5403' in st.text:
+                if u'\u732b\u54aa\u5403' in st.text:    # 猫咪吃
                     self.door.feedCat()
                     self.push_img("好吃，谢谢主人，喵喵！")
-                if u'\u4e00\u4e8c\u4e09\uff0c\u5494\u5693' in st.text:
+                if u'\u4e00\u4e8c\u4e09\u5494\u5693' in st.text: # 一二三咔嚓
                     self.push_img("茄子！")
-                if u'\u6491\u6b7b\u4e86' in st.text:
+                if u'\u6491\u6b7b\u4e86' in st.text:    # 撑死了
                     self.stop()
             self.renew_old_mentions_number()
 
@@ -132,6 +134,7 @@ class FoodDoor:
 if __name__=="__main__":
     wb=WeiBoRobot()
     wb.start()
+    # time.sleep(4)
     # wb.stop()
     #wb.send_txt(u'Hello feedcat!')
     #f = open('./yeelink.jpg', 'rb')

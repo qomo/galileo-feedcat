@@ -22,7 +22,7 @@ class WeiBoRobot(threading.Thread):
         self.expires_in=1568452509
         self.client.set_access_token(self.access_token, self.expires_in)
         self.renew_old_mentions_number()
-        self.OLD_MENTIONS_NUM = self.OLD_MENTIONS_NUM - 4
+        # self.OLD_MENTIONS_NUM = self.OLD_MENTIONS_NUM - 4
         self.door = FoodDoor(7, 8, 6)
     
     def send_txt(self, string=u"Hello World!"):
@@ -75,18 +75,28 @@ class PIRSensor(threading.Thread):
     def __init__(self, sensorPin):
         threading.Thread.__init__(self)
         self.thread_stop = False
+        self.wb = WeiBoRobot()
+        self.is_feeding = False
+        self.sensorPin = sensorPin
         pinMode(sensorPin, INPUT)
+        self.door = FoodDoor(7, 8, 6)
 
     def isCatHere(self):
-        return digitalRead(sensorPin)
+        if digitalRead(self.sensorPin)==HIGH:
+            return True
+        else:
+            return False
 
     def run(self):
+        time.sleep(2)
         while not self.thread_stop:
-            pass
+            if self.isCatHere():
+                self.door.feedCat()
+                self.wb.push_img("自己找食，丰衣足食……喵!")
+                time.sleep(600)
 
     def stop(self):
         self.thread_stop = True
-        
 
 class FoodDoor:
     """控制门控电机"""
@@ -134,6 +144,14 @@ class FoodDoor:
 if __name__=="__main__":
     wb=WeiBoRobot()
     wb.start()
+    autoFeed = PIRSensor(5)
+    autoFeed.start()
+    while 1:
+        isquit = raw_input("Input 'q' to stop program:\n")
+        if isquit == 'q':
+            wb.stop()
+            autoFeed.stop()
+            break
     # time.sleep(4)
     # wb.stop()
     #wb.send_txt(u'Hello feedcat!')

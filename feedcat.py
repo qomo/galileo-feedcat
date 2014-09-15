@@ -14,12 +14,12 @@ class WeiBoRobot(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.thread_stop = False
-        self.APP_KEY='1366434820'
-        self.APP_SECRET='e0e4ad8f66c9bc8032ce9618371a7354'
+        self.APP_KEY='xxxxxx'
+        self.APP_SECRET='xxxxxxxxxxxxxxxxxxx'
         self.CALLBACK_URL = 'https://api.weibo.com/oauth2/default.html'
         self.client = APIClient(app_key=self.APP_KEY,app_secret=self.APP_SECRET, redirect_uri=self.CALLBACK_URL)
-        self.access_token=u'2.009mf6fFSH7TUB0d3e9c1f7031M_KB'
-        self.expires_in=1568452509
+        self.access_token=u'x.xxxxxxxxxxxxxx'
+        self.expires_in=xxxxxxxxxxxxxxxxx
         self.client.set_access_token(self.access_token, self.expires_in)
         self.renew_old_mentions_number()
         # self.OLD_MENTIONS_NUM = self.OLD_MENTIONS_NUM - 4
